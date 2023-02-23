@@ -7,6 +7,7 @@
 #include "binary_objective.hpp"
 #include "multiclass_objective.hpp"
 #include "rank_objective.hpp"
+#include "rank_calibration_objective.hpp"
 #include "regression_objective.hpp"
 #include "xentropy_objective.hpp"
 
@@ -82,6 +83,8 @@ ObjectiveFunction* ObjectiveFunction::CreateObjectiveFunction(const std::string&
       return new BinaryLogloss(config);
     } else if (type == std::string("lambdarank")) {
       return new LambdarankNDCG(config);
+    } else if (type == std::string("multi_rank_calibration")) {
+      return new LambdarankCalibrationNDCG(config);
     } else if (type == std::string("rank_xendcg")) {
       return new RankXENDCG(config);
     } else if (type == std::string("multiclass")) {
@@ -127,6 +130,8 @@ ObjectiveFunction* ObjectiveFunction::CreateObjectiveFunction(const std::string&
     return new BinaryLogloss(strs);
   } else if (type == std::string("lambdarank")) {
     return new LambdarankNDCG(strs);
+  } else if (type == std::string("multi_rank_calibration")) {
+    return new LambdarankCalibrationNDCG(strs);
   } else if (type == std::string("rank_xendcg")) {
     return new RankXENDCG(strs);
   } else if (type == std::string("multiclass")) {

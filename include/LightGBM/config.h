@@ -333,7 +333,7 @@ struct Config {
   // alias = subsample_freq
   // desc = frequency for bagging
   // desc = ``0`` means disable bagging; ``k`` means perform bagging at every ``k`` iteration. Every ``k``-th iteration, LightGBM will randomly select ``bagging_fraction * 100 %`` of the data to use for the next ``k`` iterations
-  // desc = **Note**: bagging is only effective when ``0.0 < bagging_fraction < 1.0``
+  // desc = **Note**: to enable bagging, ``bagging_fraction`` should be set to value smaller than ``1.0`` as well
   int bagging_freq = 0;
 
   // alias = bagging_fraction_seed
@@ -922,6 +922,14 @@ struct Config {
   // desc = controls the number of top-results to focus on during training, refer to "truncation level" in the Sec. 3 of `LambdaMART paper <https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/MSR-TR-2010-82.pdf>`__
   // desc = this parameter is closely related to the desirable cutoff ``k`` in the metric **NDCG@k** that we aim at optimizing the ranker for. The optimal setting for this parameter is likely to be slightly higher than ``k`` (e.g., ``k + 3``) to include more pairs of documents to train on, but perhaps not too high to avoid deviating too much from the desired target metric **NDCG@k**
   int lambdarank_truncation_level = 30;
+
+  // check = >=0.0
+  // check = <=1.0
+  // desc = used only in the multi_rank_calibration objective
+  // desc = used to control the weight put on the ranking objective (relative to the calibration objective)
+  // desc = set this closer to ``1`` to put more priority on the ranking objective
+  // desc = set this closer to ``0`` to put more priority on the calibration objective
+  double rank_weight = 1.0;
 
   // desc = used only in ``lambdarank`` application
   // desc = set this to ``true`` to normalize the lambdas for different queries, and improve the performance for unbalanced data

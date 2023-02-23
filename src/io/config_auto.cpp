@@ -298,6 +298,7 @@ const std::unordered_set<std::string>& Config::parameter_set() {
   "poisson_max_delta_step",
   "tweedie_variance_power",
   "lambdarank_truncation_level",
+  "rank_weight",
   "lambdarank_norm",
   "label_gain",
   "metric",
@@ -601,6 +602,10 @@ void Config::GetMembersFromString(const std::unordered_map<std::string, std::str
   GetInt(params, "lambdarank_truncation_level", &lambdarank_truncation_level);
   CHECK_GT(lambdarank_truncation_level, 0);
 
+  GetDouble(params, "rank_weight", &rank_weight);
+  CHECK_GE(rank_weight, 0.0);
+  CHECK_LE(rank_weight, 1.0);
+
   GetBool(params, "lambdarank_norm", &lambdarank_norm);
 
   if (GetString(params, "label_gain", &tmp_str)) {
@@ -740,6 +745,7 @@ std::string Config::SaveMembersToString() const {
   str_buf << "[poisson_max_delta_step: " << poisson_max_delta_step << "]\n";
   str_buf << "[tweedie_variance_power: " << tweedie_variance_power << "]\n";
   str_buf << "[lambdarank_truncation_level: " << lambdarank_truncation_level << "]\n";
+  str_buf << "[rank_weight: " << rank_weight << "]\n";
   str_buf << "[lambdarank_norm: " << lambdarank_norm << "]\n";
   str_buf << "[label_gain: " << Common::Join(label_gain, ",") << "]\n";
   str_buf << "[eval_at: " << Common::Join(eval_at, ",") << "]\n";
@@ -875,6 +881,7 @@ const std::unordered_map<std::string, std::vector<std::string>>& Config::paramet
     {"poisson_max_delta_step", {}},
     {"tweedie_variance_power", {}},
     {"lambdarank_truncation_level", {}},
+    {"rank_weight", {}},
     {"lambdarank_norm", {}},
     {"label_gain", {}},
     {"metric", {"metrics", "metric_types"}},
@@ -1013,6 +1020,7 @@ const std::unordered_map<std::string, std::string>& Config::ParameterTypes() {
     {"poisson_max_delta_step", "double"},
     {"tweedie_variance_power", "double"},
     {"lambdarank_truncation_level", "int"},
+    {"rank_weight", "double"},
     {"lambdarank_norm", "bool"},
     {"label_gain", "vector<double>"},
     {"metric", "vector<string>"},
