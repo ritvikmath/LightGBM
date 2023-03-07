@@ -87,6 +87,8 @@ ObjectiveFunction* ObjectiveFunction::CreateObjectiveFunction(const std::string&
       return new LambdarankCalibrationNDCG(config);
     } else if (type == std::string("rank_xendcg")) {
       return new RankXENDCG(config);
+    } else if (type == std::string("multi_rank_calibration_xendcg")) {
+      return new RankCalibrationXENDCG(config);
     } else if (type == std::string("multiclass")) {
       return new MulticlassSoftmax(config);
     } else if (type == std::string("multiclassova")) {

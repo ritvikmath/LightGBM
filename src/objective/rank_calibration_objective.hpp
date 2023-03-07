@@ -230,13 +230,17 @@ class LambdarankCalibrationNDCG : public RankingCalibrationObjective {
 
     //include log loss gradients and hessians
     for (data_size_t i = 0; i < cnt; ++i) {
-      const data_size_t curr_idx = sorted_idx[i]; 
-      const double curr_score = score[curr_idx];
+      //const data_size_t curr_idx = sorted_idx[i]; 
+      //const double curr_score = score[curr_idx];
+      //const double pred_prob = 1.0f / (1.0f + std::exp(-1.0f * curr_score));
+      //const double true_label = static_cast<double>(label[curr_idx]);
+ 
+      const double curr_score = score[i];
       const double pred_prob = 1.0f / (1.0f + std::exp(-1.0f * curr_score));
-      const double true_label = static_cast<double>(label[curr_idx]);
+      const double true_label = static_cast<double>(label[i]);
       
-      lambdas[curr_idx] = rank_weight_ * lambdas[curr_idx] + (1-rank_weight_) * (pred_prob - true_label);
-      hessians[curr_idx] = rank_weight_ * hessians[curr_idx] + (1-rank_weight_) * (pred_prob) * (1 - pred_prob);
+      lambdas[i] = rank_weight_ * lambdas[i] + (1-rank_weight_) * (pred_prob - true_label);
+      hessians[i] = rank_weight_ * hessians[i] + (1-rank_weight_) * (pred_prob) * (1.0 - pred_prob);
     }
 
     //for (data_size_t i = 0; i < cnt; ++i) {
@@ -373,6 +377,13 @@ class RankCalibrationXENDCG : public RankingCalibrationObjective {
     for (data_size_t i = 0; i < cnt; ++i) {
       lambdas[i] += static_cast<score_t>(rho[i] * (sum_l2 - params[i]));
       hessians[i] = static_cast<score_t>(rho[i] * (1.0 - rho[i]));
+    }
+
+    for (data_size_t i = 0; i < cnt; ++i) {
+      const double curr_score = score[i];
+      const double pred_prob = 1.0f / (1.0f + std::exp(-1.0f * curr_score));
+      lambdas[i] = rank_weight_ * lambdas[i] + (1-rank_weight_) * (pred_prob - label[i]);
+      hessians[i] = rank_weight_ * hessians[i] + (1-rank_weight_) * (pred_prob) * (1.0 - pred_prob);
     }
 
     //for (data_size_t i = 0; i < cnt; ++i) {
